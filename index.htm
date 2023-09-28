@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>FarhanAnees</title>
+    <meta content="Tim Taubert" name="author"/>
+    <style>
+      h1 {
+        font-family: 'Ubuntu', sans-serif !important;
+        text-transform: uppercase;
+      }
+      input[type="button"] {
+        padding: 5px;
+        margin-left: 5px;
+      }
+      textarea {
+        display: block;
+        width: 90%;
+        height: 200px;
+        margin: 5px 0;
+        padding: 5px;
+      }
+
+      p {
+        width: 600px;
+      }
+      .decryptBox{
+        position: relative;
+      }
+      .decryptBox > div {
+          position: absolute;
+          top: 7px;
+          left: 89%;
+          cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>AES-GCM 256 with PBKDF2 having 5000000 iteration with SHA-512  </h1>
+
+    <div>
+    <p>By Default Salt &amp; Nonce both are 1234. But we recommend you to set your own Salt or Nonce to avoid any Dictionary or Rainbow table attack. Same salt &amp; nonce will be used for both during encryption/decryption.
+    You can also increase your iteration value to make it much hard to crcak the password, by detaul value is 5000</p>
+    <span> Salt </span>&nbsp;<input id="inputSalt" placeholder="Enter your salt..." min="4" max="4" value="1234">
+    <span>Nonce </span> &nbsp;<input id="inputNonce" placeholder="Enter your nonce..." min="4" max="4" value="1234">
+    <span>Iteration</span> &nbsp;
+    <input id="inputIteration" placeholder="Enter your Iteration..." min="4" max="4" value="5000"></div>
+
+    <textarea id=inputTextArea placeholder="Type Your Test for Encryption..."></textarea>
+
+    <input id=encryptButton type=button value="Begin Encryption">
+    <input id=decryptButton type=button value="Begin Decryption">
+    <input id=clearButton type=button value="Clear All">
+
+    <div class="decryptBox">
+    <textarea id=outputTextArea placeholder="Decrypted text will be here..." disabled></textarea>
+    <div id=copyButton>📄</div>
+    </div>
+    <script>
+    "use strict";
+ 
+  var secret = {
+    decryptionStart: function(inputContent) {
+      inputContent = atob(inputContent);
+      const ctArray1 = inputContent.split('').map(char => char.charCodeAt(0));
+      inputContent = new Uint8Array(ctArray1);
+      return retrieveKey().then(function(key) {
+        var alg = {
+          name: "AES-GCM",
+          iv: getNonce()
+        }; 
+        // Decrypt our notes using the stored |nonce|.
+        return crypto.subtle.decrypt(alg, key, inputContent)
+          .then(decode, function(err) {
+            throw "Integrity/Authenticity check failed! Invalid password?";
+          });
+      });
+ 
+    },
+ 
+    encryptionStart: function(inputContent) {
+      var buffer = encode(inputContent);
+      if (buffer.length < 1) return Promise.reject("Input is Empty");
+ 
+      return retrieveKey().then(function(key) {
+        // Set up parameters.
+        // nonce = crypto.getRandomValues(nonce);
+        var alg = {
+          name: "AES-GCM",
+          iv: getNonce()
+        };
+        // Encrypt |notes| under |key| using AES-GCM.
+        return crypto.subtle.encrypt(alg, key, buffer)
+          .then(function(encryptedContent) {
+            // console.log("================== Encrypted Content ==================");
+            // console.log(encryptedContent);
+            let u8 = new Uint8Array(encryptedContent);
+            const ctArray = Array.from(u8); // ciphertext as byte array
+            const ctStr = ctArray.map(byte => String.fromCharCode(byte)).join(''); // ciphertext as string
+            return btoa(ctStr);
+          });
+      }, function(err) {
+        return Promise.reject(err);
+      });
+    }
+  };
+ 
+  function retrieveKey() {
+    var params = Promise.all([
+      // Get base key and salt.
+      retrievePWKey(), getSalt()
+    ]);
+ 
+    return params.then(function(values) {
+      var pwKey = values[0];
+      var salt = values[1];
+ 
+      // Do the PBKDF2 dance.
+      return deriveKey(pwKey, salt);
+    }, function(err) {
+      return Promise.reject(err);
+    });
+  }
+ 
+  function deriveKey(pwKey, salt) {
+    var params = {
+      name: "PBKDF2",
+ 
+      // TODO NSS does unfortunately not support PBKDF2 with anything
+      // other than SHA-1 for now. Update this to SHA-256 once we support it.
+      hash: "SHA-512",
+      salt: salt,
+ 
+      // The more iterations the slower, but also more secure.
+      iterations: getIteration()
+    };
+ 
+    // The derived key will be used to encrypt with AES.
+    var alg = {
+      name: "AES-GCM",
+      length: 256
+    };
+    var usages = ["encrypt", "decrypt"];
+ 
+    return crypto.subtle.deriveKey(
+      params, pwKey, alg, false, usages);
+  }
+ 
+  function retrievePWKey() {
+    // We will derive a new key from it.
+    var usages = ["deriveKey"];
+    var buffer = encode(prompt("Please enter your password"));
+    if (buffer.length === 0) return Promise.reject("Please enter password");
+    return crypto.subtle.importKey("raw", buffer, "PBKDF2", false, usages);
+  }
+ 
+  function getSalt() {
+    return new Promise((resolve) => {
+      // We should generate at least 8 bytes
+      // to allow for 2^64 possible variations.
+      // var salt = crypto.getRandomValues(new Uint8Array(8));
+      let inputSalt = document.getElementById("inputSalt").value.trim();
+      if(inputSalt.length < 1) inputSalt = "1234";
+      inputSalt = Array.from(inputSalt).map(char => char.charCodeAt(0));
+      resolve(new Uint32Array([...inputSalt]))
+    })
+  }
+ 
+  function getNonce() {
+      let inputNonce = document.getElementById("inputNonce").value.trim();
+      if(inputNonce.length < 1) inputNonce = "1234";
+      inputNonce = Array.from(inputNonce).map(char => char.charCodeAt(0));
+      return new Uint32Array([...inputNonce])
+  }
+
+  function getIteration() {
+      let inputIteration = document.getElementById("inputIteration").value.trim();
+      if(inputIteration.length < 1) inputIteration = 50000;
+      return inputIteration;
+  }
+
+  
+
+  function encode(str) {
+    return new TextEncoder("utf-8").encode(str);
+  }
+ 
+  function decode(buf) {
+    return new TextDecoder("utf-8").decode(new Uint8Array(buf));
+  }
+ 
+ 
+  window.addEventListener('DOMContentLoaded', function() {
+    var encryptButton = document.getElementById("encryptButton");
+    var decryptButton = document.getElementById("decryptButton");
+    var clearButton = document.getElementById("clearButton");
+    var inputTextArea = document.getElementById("inputTextArea");
+    var outputTextArea = document.getElementById("outputTextArea");
+    var copyButton = document.getElementById("copyButton");
+
+    
+    copyButton.style.display = 'none';
+ 
+    encryptButton.addEventListener('click', function() {
+      outputTextArea.value = '';
+      copyButton.style.display = 'none';
+      outputTextArea.style.backgroundColor = null;
+      outputTextArea.placeholder = "Processing....";
+      
+      secret.encryptionStart(inputTextArea.value.trim())
+        .then((secretTest) => {
+          outputTextArea.value = secretTest;
+          copyButton.style.display = 'block';
+          debugger;
+        }, function(err) {
+          alert(err);
+        });
+    });
+ 
+    decryptButton.addEventListener('click', function() {
+      outputTextArea.value = '';
+      copyButton.style.display = 'none';
+      outputTextArea.style.backgroundColor = null;
+      outputTextArea.placeholder = "Processing....";
+      secret.decryptionStart(inputTextArea.value.trim())
+        .then((secretTest) => {
+          outputTextArea.value = secretTest;
+        }, function(err) {
+          alert(err);
+        });
+    });
+
+    clearButton.addEventListener('click', function() {
+      outputTextArea.value = '';
+      inputTextArea.value = '';
+      copyButton.style.display = 'none';
+      outputTextArea.style.backgroundColor = null;
+     
+    });
+    copyButton.addEventListener('click', function(){      
+      outputTextArea.select();
+      outputTextArea.setSelectionRange(0, 99999);
+      navigator.clipboard.writeText(outputTextArea.value);
+      outputTextArea.style.backgroundColor = 'lightcyan';
+    });
+  });
+ 
+  </script>
+  </body>
+</html>
