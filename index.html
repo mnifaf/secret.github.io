@@ -1,249 +1,48 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>FarhanAnees</title>
-    <meta content="Tim Taubert" name="author"/>
-    <style>
-      h1 {
-        font-family: 'Ubuntu', sans-serif !important;
-        text-transform: uppercase;
-      }
-      input[type="button"] {
-        padding: 5px;
-        margin-left: 5px;
-      }
-      textarea {
-        display: block;
-        width: 90%;
-        height: 200px;
-        margin: 5px 0;
-        padding: 5px;
-      }
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PSX Simplified · Explore</title>
+<meta name="description" content="Explore every PSX company">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<header class="top"><nav class="wrap navbar">
+<a class="brand" href="index.html"><span>PSX</span><b>Simplified</b></a>
+<div class="navlinks"><a href="index.html" class="on">Explore</a><a href="news.html" class="">News</a></div>
+<div class="mkt">KSE-100 PE <strong>7.83x</strong> · fair PE <strong class="haldi">7.09x</strong></div>
+</nav></header>
 
-      p {
-        width: 600px;
-      }
-      .decryptBox{
-        position: relative;
-      }
-      .decryptBox > div {
-          position: absolute;
-          top: 7px;
-          left: 88%;
-          cursor: pointer;
-      }
-    </style>
-  </head>
-  <body>
-    <h1>AES-GCM 256 with PBKDF2 having 5000000 iteration with SHA-512  </h1>
+<section class="hero"><div class="wrap col">
+<p class="kicker">Stock Explore</p>
+<h1>Every PSX company, one simple picture.</h1>
+<p class="lead">456 companies: 10 years of yearly and quarterly results turned into a health shape, a value check and plain-language notes.</p>
+<div class="search"><label for="q" class="sr">Search a company</label>
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0B3D2E" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+<input id="q" type="search" placeholder="Search symbol or name, e.g. PPL, Lucky Cement" autocomplete="off"></div>
+</div></section>
+<main class="wrap col" style="padding-top:36px">
+<section class="col tight"><h2>Start with what matters to you</h2><p class="muted">Pick one to filter the list. Click it again to clear.</p></section>
+<section class="ideas" aria-label="What matters to you"><button class="idea card" data-idea="cheap" aria-pressed="false"><span class="ico" style="background:#DCEFE6;color:#0B3D2E">PE</span><strong>Value · 134</strong><span class="muted">"I want to pay less." PE at or below its sector and the KSE-100: the first test of /best.</span></button><button class="idea card" data-idea="gr" aria-pressed="false"><span class="ico" style="background:#E4EEF6;color:#1D4466">↑</span><strong>Growth · 224</strong><span class="muted">"I want a business that is growing." Earnings per share up 15% or more in 12 months.</span></button><button class="idea card" data-idea="dv" aria-pressed="false"><span class="ico" style="background:#FADBD6;color:#8A2A1F">%</span><strong>Income · 114</strong><span class="muted">"I want regular cash." Dividend yield of 6% or more at today's price.</span></button><button class="idea card" data-idea="nc" aria-pressed="false"><span class="ico" style="background:#EEF3EF;color:#0B3D2E">0</span><strong>Safety · 100</strong><span class="muted">"I want to sleep well." More cash than borrowing on the latest balance sheet.</span></button><button class="idea card" data-idea="cd" aria-pressed="false"><span class="ico" style="background:#FCEFCF;color:#6B4A06">Rs</span><strong>Circular debt · 14</strong><span class="muted">A theme: energy companies owed at least half their market value by the gas and power chain.</span></button></section>
+<section class="col" id="stocks">
+<div class="bar">
+<div class="col tight"><h2>Stocks</h2><span class="muted" id="count"></span></div>
+<div class="controls">
+<label>Sector <select id="sector"><option value="">All sectors</option><option value="Autos">Autos</option><option value="Banks">Banks</option><option value="Building Materials">Building Materials</option><option value="Cement">Cement</option><option value="Chemicals">Chemicals</option><option value="Engineering &amp; Steel">Engineering &amp; Steel</option><option value="Fertilizer">Fertilizer</option><option value="Financial Services">Financial Services</option><option value="Food &amp; Personal Care">Food &amp; Personal Care</option><option value="Insurance">Insurance</option><option value="Misc">Misc</option><option value="Oil &amp; Gas (other)">Oil &amp; Gas (other)</option><option value="Oil &amp; Gas E&amp;P">Oil &amp; Gas E&amp;P</option><option value="Oil Marketing (OMC)">Oil Marketing (OMC)</option><option value="Paper &amp; Packaging">Paper &amp; Packaging</option><option value="Pharma">Pharma</option><option value="Power">Power</option><option value="Real Estate">Real Estate</option><option value="Refinery">Refinery</option><option value="Sugar">Sugar</option><option value="Tech &amp; Telecom">Tech &amp; Telecom</option><option value="Textile">Textile</option></select></label>
+<label>Sort <select id="sort">
+<option value="health">Health score</option><option value="pevs">Cheapest vs sector</option>
+<option value="broker">Broker upside</option><option value="y1">1-year change</option><option value="mcap">Market value</option>
+</select></label></div></div>
+<p class="legend card"><svg width="30" height="30" viewBox="0 0 100 100" role="img" aria-label="Health 10 of 10: Profit 2, Margins 2, Debt 2, Cash 2, Quality 2"><polygon points="50.0,6.0 91.8,36.4 75.9,85.6 24.1,85.6 8.2,36.4" fill="#F6F4EC" stroke="#0B3D2E" stroke-opacity=".3" stroke-width="1.5"/><polygon points="50.0,28.0 70.9,43.2 62.9,67.8 37.1,67.8 29.1,43.2" fill="none" stroke="#0B3D2E" stroke-opacity=".18" stroke-width="1"/><polygon points="50.0,6.0 91.8,36.4 75.9,85.6 24.1,85.6 8.2,36.4" fill="#0E6B4F" fill-opacity=".88" stroke="#0B3D2E" stroke-width="2" stroke-linejoin="round"/></svg><span>Health shape: <strong>Profit · Margins · Debt · Cash · Quality</strong>, 0–2 each. Bigger shape = stronger business. Banks and insurers are not scored (dashed).</span></p>
+<div class="grid" id="grid"></div>
+<button class="more" id="more">Show more</button>
+</section></main>
+<script src="assets/data.js"></script>
+<script src="assets/explore.js"></script>
 
-    <div>
-    <p>By Default Salt &amp; Nonce both are 1234. But we recommends you to set your own Salt or Nonce to avoid any Dictionary or Rainbow table attack. Same salt &amp; nonce will be used for both during encryption/decryption.
-    You can also increase your iteration value to make it much hard to crcak the password, by detaul value is 5000</p>
-    <span> Salt </span>&nbsp;<input id="inputSalt" type="password" placeholder="Enter your salt..." min="4" max="4" value="1234">
-    <span>Nonce </span> &nbsp;<input id="inputNonce" type="password" placeholder="Enter your nonce..." min="4" max="4" value="1234">
-    <span>Iteration</span> &nbsp;
-    <input id="inputIteration" type="password" placeholder="Enter your Iteration..." min="4" max="4" value="5000"></div>
-
-    <textarea id=inputTextArea placeholder="Type Your Test for Encryption..."></textarea>
-
-    <input id=encryptButton type=button value="Begin Encryption">
-    <input id=decryptButton type=button value="Begin Decryption">
-    <input id=clearButton type=button value="Clear All">
-
-    <div class="decryptBox">
-    <textarea id=outputTextArea placeholder="Decrypted text will be here..." disabled></textarea>
-    <div id=copyButton>📄</div>
-    </div>
-    <script>
-    "use strict";
- 
-  var secret = {
-    decryptionStart: function(inputContent) {
-      inputContent = atob(inputContent);
-      const ctArray1 = inputContent.split('').map(char => char.charCodeAt(0));
-      inputContent = new Uint8Array(ctArray1);
-      return retrieveKey().then(function(key) {
-        var alg = {
-          name: "AES-GCM",
-          iv: getNonce()
-        }; 
-        // Decrypt our notes using the stored |nonce|.
-        return crypto.subtle.decrypt(alg, key, inputContent)
-          .then(decode, function(err) {
-            throw "Integrity/Authenticity check failed! Invalid password?";
-          });
-      });
- 
-    },
- 
-    encryptionStart: function(inputContent) {
-      var buffer = encode(inputContent);
-      if (buffer.length < 1) return Promise.reject("Input is Empty");
- 
-      return retrieveKey().then(function(key) {
-        // Set up parameters.
-        // nonce = crypto.getRandomValues(nonce);
-        var alg = {
-          name: "AES-GCM",
-          iv: getNonce()
-        };
-        // Encrypt |notes| under |key| using AES-GCM.
-        return crypto.subtle.encrypt(alg, key, buffer)
-          .then(function(encryptedContent) {
-            // console.log("================== Encrypted Content ==================");
-            // console.log(encryptedContent);
-            let u8 = new Uint8Array(encryptedContent);
-            const ctArray = Array.from(u8); // ciphertext as byte array
-            const ctStr = ctArray.map(byte => String.fromCharCode(byte)).join(''); // ciphertext as string
-            return btoa(ctStr);
-          });
-      }, function(err) {
-        return Promise.reject(err);
-      });
-    }
-  };
- 
-  function retrieveKey() {
-    var params = Promise.all([
-      // Get base key and salt.
-      retrievePWKey(), getSalt()
-    ]);
- 
-    return params.then(function(values) {
-      var pwKey = values[0];
-      var salt = values[1];
- 
-      // Do the PBKDF2 dance.
-      return deriveKey(pwKey, salt);
-    }, function(err) {
-      return Promise.reject(err);
-    });
-  }
- 
-  function deriveKey(pwKey, salt) {
-    var params = {
-      name: "PBKDF2",
- 
-      // TODO NSS does unfortunately not support PBKDF2 with anything
-      // other than SHA-1 for now. Update this to SHA-256 once we support it.
-      hash: "SHA-512",
-      salt: salt,
- 
-      // The more iterations the slower, but also more secure.
-      iterations: getIteration()
-    };
- 
-    // The derived key will be used to encrypt with AES.
-    var alg = {
-      name: "AES-GCM",
-      length: 256
-    };
-    var usages = ["encrypt", "decrypt"];
- 
-    return crypto.subtle.deriveKey(
-      params, pwKey, alg, false, usages);
-  }
- 
-  function retrievePWKey() {
-    // We will derive a new key from it.
-    var usages = ["deriveKey"];
-    var buffer = encode(prompt("Please enter your password"));
-    if (buffer.length === 0) return Promise.reject("Please enter password");
-    return crypto.subtle.importKey("raw", buffer, "PBKDF2", false, usages);
-  }
- 
-  function getSalt() {
-    return new Promise((resolve) => {
-      // We should generate at least 8 bytes
-      // to allow for 2^64 possible variations.
-      // var salt = crypto.getRandomValues(new Uint8Array(8));
-      let inputSalt = document.getElementById("inputSalt").value.trim();
-      if(inputSalt.length < 1) inputSalt = "1234";
-      inputSalt = Array.from(inputSalt).map(char => char.charCodeAt(0));
-      resolve(new Uint32Array([...inputSalt]))
-    })
-  }
- 
-  function getNonce() {
-      let inputNonce = document.getElementById("inputNonce").value.trim();
-      if(inputNonce.length < 1) inputNonce = "1234";
-      inputNonce = Array.from(inputNonce).map(char => char.charCodeAt(0));
-      return new Uint32Array([...inputNonce])
-  }
-
-  function getIteration() {
-      let inputIteration = document.getElementById("inputIteration").value.trim();
-      if(inputIteration.length < 1) inputIteration = 50000;
-      return inputIteration;
-  }
-  
-  function encode(str) {
-    return new TextEncoder("utf-8").encode(str);
-  }
- 
-  function decode(buf) {
-    return new TextDecoder("utf-8").decode(new Uint8Array(buf));
-  }
- 
-  window.addEventListener('DOMContentLoaded', function() {
-    var encryptButton = document.getElementById("encryptButton");
-    var decryptButton = document.getElementById("decryptButton");
-    var clearButton = document.getElementById("clearButton");
-    var inputTextArea = document.getElementById("inputTextArea");
-    var outputTextArea = document.getElementById("outputTextArea");
-    var copyButton = document.getElementById("copyButton");
-
-    
-    copyButton.style.display = 'none';
- 
-    encryptButton.addEventListener('click', function() {
-      outputTextArea.value = '';
-      copyButton.style.display = 'none';
-      outputTextArea.style.backgroundColor = null;
-      outputTextArea.placeholder = "Processing....";
-      
-      secret.encryptionStart(inputTextArea.value.trim())
-        .then((secretTest) => {
-          outputTextArea.value = secretTest;
-          copyButton.style.display = 'block';
-        }, function(err) {
-          alert(err);
-        });
-    });
- 
-    decryptButton.addEventListener('click', function() {
-      outputTextArea.value = '';
-      copyButton.style.display = 'none';
-      outputTextArea.style.backgroundColor = null;
-      outputTextArea.placeholder = "Processing....";
-      secret.decryptionStart(inputTextArea.value.trim())
-        .then((secretTest) => {
-          outputTextArea.value = secretTest;
-          copyButton.style.display = 'block';
-        }, function(err) {
-          alert(err);
-        });
-    });
-
-    clearButton.addEventListener('click', function() {
-      outputTextArea.value = '';
-      inputTextArea.value = '';
-      copyButton.style.display = 'none';
-      outputTextArea.style.backgroundColor = null;
-     
-    });
-    copyButton.addEventListener('click', function(){      
-      outputTextArea.select();
-      outputTextArea.setSelectionRange(0, 99999);
-      navigator.clipboard.writeText(outputTextArea.value);
-      outputTextArea.style.backgroundColor = 'lightcyan';
-    });
-    const myinfo = '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';
-    inputTextArea.value = myinfo;
-  });
- 
-  </script>
-  </body>
+<footer class="wrap foot">Built 2026-11-15 from this project's own data (prices 2026-11-13). Analysis and education only, not buy or sell advice.</footer>
+</body>
 </html>
